@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccessObject.Models
 {
@@ -24,8 +25,19 @@ namespace DataAccessObject.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-              optionsBuilder.UseSqlServer("server =(local); database = AuthorInstitution2023DB;uid=sa;pwd=123456;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer(GetConnectionString());
             }
+        }
+
+
+        private string GetConnectionString()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+            var strConn = config["ConnectionString"];
+            return strConn;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

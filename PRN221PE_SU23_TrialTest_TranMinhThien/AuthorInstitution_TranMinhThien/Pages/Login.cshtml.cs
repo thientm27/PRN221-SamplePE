@@ -15,7 +15,7 @@ namespace AuthorInstitution_TranMinhThien.Pages
 
         public IActionResult OnPostLogin()
         {
-            MemberAccount loginAccount = authorInstitutionRepo.Login(MemberAccount.EmailAddress, MemberAccount.MemberPassword);
+            MemberAccount? loginAccount = authorInstitutionRepo.Login(MemberAccount.EmailAddress, MemberAccount.MemberPassword);
             if (loginAccount == null)
             {
                 ViewData["notification"] = "Email or Password is wrong!";
