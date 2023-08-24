@@ -15,7 +15,13 @@ namespace Repository.Repo
 
         public Pagination<CorrespondingAuthor> GetAuthorPagination(int pageIndex, int pageSize)
         {
-             var entities =    unitOfWork.CorrespondingAuthorDao.Get();
+             var entities =    unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution");
+            return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+        }
+
+        public Pagination<CorrespondingAuthor> GetAuthorPaginationSearch(int pageIndex, int pageSize, string key)
+        {
+            var entities = unitOfWork.CorrespondingAuthorDao.Get(filter: o => o.AuthorName.ToLower().Contains(key.ToLower()) || o.Skills.ToLower().Contains(key.ToLower()), includeProperties: "Institution");
             return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
         }
 
