@@ -12,9 +12,14 @@
 </p>
 
 <form method="post">
+    <select name="SearchBy">
+        <option value="name">Search by name</option>
+        <option value="skills">Search by skills</option>
+    </select>
     <input type="text" asp-for="Keyword" />
     <button type="submit" class="btn-primary">Search</button>
 </form>
+
 
 
 <table class="table">

@@ -19,10 +19,29 @@ namespace Repository.Repo
             return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
         }
 
-        public Pagination<CorrespondingAuthor> GetAuthorPaginationSearch(int pageIndex, int pageSize, string key)
+        public Pagination<CorrespondingAuthor> GetAuthorPaginationSearch(int pageIndex, int pageSize, string key, int type = 0)
         {
-            var entities = unitOfWork.CorrespondingAuthorDao.Get(filter: o => o.AuthorName.ToLower().Contains(key.ToLower()) || o.Skills.ToLower().Contains(key.ToLower()), includeProperties: "Institution");
-            return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+            switch (type)
+            {
+                case 0:
+                    {
+                        var entities = unitOfWork.CorrespondingAuthorDao.Get(filter: o => o.AuthorName.ToLower().Contains(key.ToLower()) || o.Skills.ToLower().Contains(key.ToLower()), includeProperties: "Institution");
+                        return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+                    }
+                case 1:
+                    {
+                        var entities = unitOfWork.CorrespondingAuthorDao.Get(filter: o => o.AuthorName.ToLower().Contains(key.ToLower()), includeProperties: "Institution");
+                        return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+
+                    }
+                case 2:
+                    {
+                        var entities = unitOfWork.CorrespondingAuthorDao.Get(filter: o => o.Skills.ToLower().Contains(key.ToLower()), includeProperties: "Institution");
+                        return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+
+                    }
+            }
+            return new Pagination<CorrespondingAuthor>();
         }
 
         public MemberAccount? Login(string username, string password)
