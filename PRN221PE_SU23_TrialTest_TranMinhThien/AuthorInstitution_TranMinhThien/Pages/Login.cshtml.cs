@@ -24,7 +24,7 @@ namespace AuthorInstitution_TranMinhThien.Pages
             else
             if (loginAccount.MemberRole == 1)
             {
-                return RedirectToPage("#");
+                return RedirectToPage("./Manage/Index");
             }
             else
             {

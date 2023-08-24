@@ -1,15 +1,12 @@
-﻿using DataAccessObject.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ClubMemberShip.Repo.Utils;
+using DataAccessObject.Models;
 
 namespace Repository
 {
     public interface IAuthorInstitutionRepo
     {
         public MemberAccount? Login(string username, string password);
+        public Pagination<CorrespondingAuthor> GetAuthorPagination(int pageIndex, int pageSize);
 
     }
 }
