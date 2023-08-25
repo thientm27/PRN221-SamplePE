@@ -1,9 +1,11 @@
 ﻿using ClubMemberShip.Repo.Utils;
 using DataAccessObject;
 using DataAccessObject.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace Repository.Repo
     public class AuthorInstitutionRepo : IAuthorInstitutionRepo
     {
         private UnitOfWork unitOfWork = new UnitOfWork();
-
+       
         public void DeleteAuthor(object id)
         {
             unitOfWork.CorrespondingAuthorDao.DeleteById(id);
@@ -60,7 +62,10 @@ namespace Repository.Repo
             return unitOfWork.MemberAccoutDao.Get(filter: o => o.EmailAddress.ToLower().Equals(username.ToLower()) && o.MemberPassword.Equals(password)).FirstOrDefault();
         }
 
-
+        public List<InstitutionInformation> GetInstitutionInformations()
+        {
+            return unitOfWork.InstitutionInformationDao.Get();
+        }
         private CorrespondingAuthor? AddNewAuthor(CorrespondingAuthor author)
         {
             author.AuthorId = GetNextAuthorIdString();

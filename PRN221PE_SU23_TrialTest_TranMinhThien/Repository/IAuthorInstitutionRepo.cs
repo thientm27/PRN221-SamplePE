@@ -10,6 +10,8 @@ namespace Repository
         public Pagination<CorrespondingAuthor> GetAuthorPaginationSearch(int pageIndex, int pageSize, string key, int type = 0 );
         public void DeleteAuthor(object id);
         public CorrespondingAuthor GetAuthorById(object id);
+        public List<InstitutionInformation> GetInstitutionInformations();
+        public CorrespondingAuthor? AddNewAuthor(CorrespondingAuthor author);
 
     }
 }

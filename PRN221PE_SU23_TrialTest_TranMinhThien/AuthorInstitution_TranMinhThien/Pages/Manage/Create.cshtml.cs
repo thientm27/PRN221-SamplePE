@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DataAccessObject.Models;
+using Repository.Repo;
+using Repository;
 
 namespace AuthorInstitution_TranMinhThien.Pages.Manage
 {
     public class CreateModel : PageModel
     {
-        private readonly DataAccessObject.Models.AuthorInstitution2023DBContext _context;
-
-        public CreateModel(DataAccessObject.Models.AuthorInstitution2023DBContext context)
-        {
-            _context = context;
-        }
-
+        private IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
         public IActionResult OnGet()
         {
-        ViewData["InstitutionId"] = new SelectList(_context.InstitutionInformations, "InstitutionId", "Area");
+        ViewData["InstitutionId"] = new SelectList(authorInstitutionRepo.GetInstitutionInformations(), "InstitutionId", "Area");
             return Page();
         }
 
@@ -29,15 +22,14 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
-          if (!ModelState.IsValid || _context.CorrespondingAuthors == null || CorrespondingAuthor == null)
+          if (!ModelState.IsValid || CorrespondingAuthor == null)
             {
                 return Page();
             }
 
-            _context.CorrespondingAuthors.Add(CorrespondingAuthor);
-            await _context.SaveChangesAsync();
+            authorInstitutionRepo.AddNewAuthor(CorrespondingAuthor);
 
             return RedirectToPage("./Index");
         }
