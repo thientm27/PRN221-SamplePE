@@ -6,29 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DataAccessObject.Models;
+using Repository.Repo;
+using Repository;
 
 namespace AuthorInstitution_TranMinhThien.Pages.Manage
 {
     public class DeleteModel : PageModel
     {
-        private readonly DataAccessObject.Models.AuthorInstitution2023DBContext _context;
-
-        public DeleteModel(DataAccessObject.Models.AuthorInstitution2023DBContext context)
-        {
-            _context = context;
-        }
-
+        IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
         [BindProperty]
-      public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
+        public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public IActionResult OnGetc(string id)
         {
-            if (id == null || _context.CorrespondingAuthors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var correspondingauthor = await _context.CorrespondingAuthors.FirstOrDefaultAsync(m => m.AuthorId == id);
+            var correspondingauthor = authorInstitutionRepo.GetAuthorById(id);
 
             if (correspondingauthor == null)
             {
@@ -41,20 +37,13 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public IActionResult OnPost(string id)
         {
-            if (id == null || _context.CorrespondingAuthors == null)
+            if (id == null )
             {
                 return NotFound();
             }
-            var correspondingauthor = await _context.CorrespondingAuthors.FindAsync(id);
-
-            if (correspondingauthor != null)
-            {
-                CorrespondingAuthor = correspondingauthor;
-                _context.CorrespondingAuthors.Remove(CorrespondingAuthor);
-                await _context.SaveChangesAsync();
-            }
+            authorInstitutionRepo.DeleteAuthor(id);
 
             return RedirectToPage("./Index");
         }

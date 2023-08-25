@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Repository.Repo
@@ -13,9 +14,19 @@ namespace Repository.Repo
     {
         private UnitOfWork unitOfWork = new UnitOfWork();
 
+        public void DeleteAuthor(object id)
+        {
+            unitOfWork.CorrespondingAuthorDao.DeleteById(id);
+        }
+
+        public CorrespondingAuthor? GetAuthorById(object id)
+        {
+            return unitOfWork.CorrespondingAuthorDao.GetById(id);
+        }
+
         public Pagination<CorrespondingAuthor> GetAuthorPagination(int pageIndex, int pageSize)
         {
-             var entities =    unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution");
+            var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution");
             return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
         }
 
@@ -46,7 +57,51 @@ namespace Repository.Repo
 
         public MemberAccount? Login(string username, string password)
         {
-           return unitOfWork.MemberAccoutDao.Get(filter: o => o.EmailAddress.ToLower().Equals(username.ToLower()) && o.MemberPassword.Equals(password)).FirstOrDefault();
+            return unitOfWork.MemberAccoutDao.Get(filter: o => o.EmailAddress.ToLower().Equals(username.ToLower()) && o.MemberPassword.Equals(password)).FirstOrDefault();
+        }
+
+
+        private CorrespondingAuthor? AddNewAuthor(CorrespondingAuthor author)
+        {
+            author.AuthorId = GetNextAuthorIdString();
+            unitOfWork.CorrespondingAuthorDao.Create(author);
+            return unitOfWork.CorrespondingAuthorDao.GetById(author.AuthorId);
+        }
+
+        private string GetNextAuthorIdString()
+        {
+            try
+            {
+                string lastId = unitOfWork.CorrespondingAuthorDao.Get().OrderBy(p => p.AuthorId).LastOrDefault().AuthorId;
+                string pattern = @"^([A-Za-z]+)(\d+)$";
+
+                Match match = Regex.Match(lastId, pattern);
+
+                if (match.Success)
+                {
+                    // Extract the alphabetic prefix and numeric part from the ID
+                    string prefix = match.Groups[1].Value;
+                    string numericPart = match.Groups[2].Value;
+
+                    // Convert the numeric part to an integer, increment by one, and then format with leading zeros
+                    int numericValue = int.Parse(numericPart);
+                    numericValue++;
+                    // Reconstruct the ID with the incremented numeric part
+                    string incrementedID = prefix + new string('0', (4 - numericValue.ToString().Length)) + numericValue.ToString();
+
+
+                    return incrementedID;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
