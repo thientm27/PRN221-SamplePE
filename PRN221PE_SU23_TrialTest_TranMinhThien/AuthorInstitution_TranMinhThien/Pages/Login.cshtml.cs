@@ -8,14 +8,14 @@ namespace AuthorInstitution_TranMinhThien.Pages
 {
     public class LoginModel : PageModel
     {
-        IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
+        IAuthorInstitutionRepo _authorInstitutionRepo = new AuthorInstitutionRepo();
 
         [BindProperty]
         public MemberAccount MemberAccount { get; set; } = default!;
 
         public IActionResult OnPostLogin()
         {
-            MemberAccount? loginAccount = authorInstitutionRepo.Login(MemberAccount.EmailAddress, MemberAccount.MemberPassword);
+            MemberAccount? loginAccount = _authorInstitutionRepo.Login(MemberAccount.MemberId, MemberAccount.MemberPassword);
             if (loginAccount == null)
             {
                 ViewData["notification"] = "Email or Password is wrong!";
@@ -24,6 +24,7 @@ namespace AuthorInstitution_TranMinhThien.Pages
             else
             if (loginAccount.MemberRole == 1)
             {
+                HttpContext.Session.SetString("User", loginAccount.MemberId);
                 return RedirectToPage("./Manage/Index");
             }
             else
@@ -33,5 +34,11 @@ namespace AuthorInstitution_TranMinhThien.Pages
             }
 
         }
+        public IActionResult OnPostLogOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/Login");
+        }
+
     }
 }

@@ -15,22 +15,30 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
     {
         IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
 
-        public IList<CorrespondingAuthor> CorrespondingAuthor { get;set; } = default!;
-        [BindProperty(SupportsGet = true)]
-        public int PageIndex { get; set; } = 1;
+        public IList<CorrespondingAuthor> CorrespondingAuthor { get; set; } = default!;
+        [BindProperty(SupportsGet = true)] public int PageIndex { get; set; } = 1;
         public int TotalPages { get; set; }
         public int PageSize { get; set; } = 4;
 
-        [BindProperty]
-        public string? SearchBy { get; set; }
+        [BindProperty] public string? SearchBy { get; set; }
 
-        [BindProperty]
-        public string? Keyword { get; set; }
-        [BindProperty]
-        public string? NewId { get; set; }
+        [BindProperty] public string? Keyword { get; set; }
+        [BindProperty] public string? NewId { get; set; }
+
         public IActionResult OnGet(string? id)
         {
-            if(id == null)
+            var loginId = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(loginId))
+            {
+                return RedirectToPage("../Login");
+            }
+            if (authorInstitutionRepo.CheckUser(loginId) == null)
+            {
+                return RedirectToPage("../Login");
+            }
+
+            
+            if (id == null)
             {
                 NewId = null;
                 var data = authorInstitutionRepo.GetAuthorPagination(PageIndex - 1, PageSize);
@@ -46,13 +54,13 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
                 CorrespondingAuthor = data.Items.ToList();
                 return Page();
             }
-
         }
+
         public IActionResult OnPost()
         {
-            if(Keyword == null)
+            if (Keyword == null)
             {
-               return OnGet(NewId);
+                return OnGet(NewId);
             }
             else
             {
@@ -72,7 +80,6 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
                     return Page();
                 }
             }
-
         }
     }
 }

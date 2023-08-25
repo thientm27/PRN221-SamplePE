@@ -17,6 +17,17 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
 
         public IActionResult OnGet(string id)
         {
+            var loginId = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(loginId))
+            {
+                return RedirectToPage("../Login");
+            }
+            if (authorInstitutionRepo.CheckUser(loginId) == null)
+            {
+                return RedirectToPage("../Login");
+            }
+            
+            
             if (id == null)
             {
                 return RedirectToPage("./Index");

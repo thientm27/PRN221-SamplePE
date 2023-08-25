@@ -19,6 +19,11 @@ namespace Repository.Repo
             return unitOfWork.CorrespondingAuthorDao.GetById(id);
         }
 
+        public MemberAccount? CheckUser(string memberId)
+        {
+            return unitOfWork.MemberAccoutDao.GetById(memberId);
+        }
+
         public Pagination<CorrespondingAuthor> GetAuthorPagination(int pageIndex, int pageSize)
         {
             var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution");
@@ -60,9 +65,9 @@ namespace Repository.Repo
             return new Pagination<CorrespondingAuthor>();
         }
 
-        public MemberAccount? Login(string username, string password)
+        public MemberAccount? Login(string memberId, string password)
         {
-            return unitOfWork.MemberAccoutDao.Get(filter: o => o.EmailAddress.ToLower().Equals(username.ToLower()) && o.MemberPassword.Equals(password)).FirstOrDefault();
+            return unitOfWork.MemberAccoutDao.Get(filter: o => o.MemberId.ToLower().Equals(memberId.ToLower()) && o.MemberPassword.Equals(password)).FirstOrDefault();
         }
 
         public List<InstitutionInformation> GetInstitutionInformations()

@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DataAccessObject.Models;
@@ -11,14 +10,26 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
     public class CreateModel : PageModel
     {
         private IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
+
         public IActionResult OnGet()
         {
-            ViewData["InstitutionId"] = new SelectList(authorInstitutionRepo.GetInstitutionInformations(), "InstitutionId", "Area");
+            var loginId = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(loginId))
+            {
+                return RedirectToPage("../Login");
+            }
+
+            if (authorInstitutionRepo.CheckUser(loginId) == null)
+            {
+                return RedirectToPage("../Login");
+            }
+
+            ViewData["InstitutionId"] = new SelectList(authorInstitutionRepo.GetInstitutionInformations(),
+                "InstitutionId", "Area");
             return Page();
         }
 
-        [BindProperty]
-        public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
+        [BindProperty] public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
 
         public IActionResult OnPost()
         {
@@ -29,27 +40,32 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
 
             if (!CheckName(CorrespondingAuthor.AuthorName))
             {
-                ModelState.AddModelError("CorrespondingAuthor.AuthorName", "Author’s name from 6 to 100 characters. Each word of the corresponding author name (AuthorName) must begin with the capital letter.");
+                ModelState.AddModelError("CorrespondingAuthor.AuthorName",
+                    "Author’s name from 6 to 100 characters. Each word of the corresponding author name (AuthorName) must begin with the capital letter.");
                 return OnGet();
             }
 
             var result = authorInstitutionRepo.AddNewAuthor(CorrespondingAuthor);
 
-            return RedirectToPage("./Index", new {id = result?.AuthorId});
+            return RedirectToPage("./Index", new { id = result?.AuthorId });
         }
 
         private bool CheckBirthday(DateTime birthday)
         {
             var check = true;
             DateTime minDate;
-            DateTime.TryParseExact("1991-01-01 00:00", "yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out minDate);
+            DateTime.TryParseExact("1991-01-01 00:00", "yyyy-MM-dd HH:mm",
+                System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None,
+                out minDate);
             DateTime maxDate = DateTime.Now;
             if (birthday >= maxDate || birthday <= minDate)
             {
                 check = false;
             }
+
             return check;
         }
+
         private bool CheckName(string name)
         {
             bool check = true;
@@ -67,6 +83,7 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
                     check = false;
                 }
             }
+
             return check;
         }
     }

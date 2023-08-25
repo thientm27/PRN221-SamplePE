@@ -5,7 +5,8 @@ namespace Repository
 {
     public interface IAuthorInstitutionRepo
     {
-        public MemberAccount? Login(string username, string password);
+        public MemberAccount? Login(string memberId, string password);
+        public MemberAccount? CheckUser(string memberId);
         public Pagination<CorrespondingAuthor> GetAuthorPagination(int pageIndex, int pageSize);
         public Pagination<CorrespondingAuthor> GetAuthorPaginationSpecialEntity(int pageIndex, int pageSize, string keyId);
         public Pagination<CorrespondingAuthor> GetAuthorPaginationSearch(int pageIndex, int pageSize, string key, int type = 0 );

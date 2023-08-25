@@ -14,11 +14,22 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
     public class DeleteModel : PageModel
     {
         IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
-        [BindProperty]
-        public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
+        [BindProperty] public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
 
         public IActionResult OnGet(string id)
         {
+            var loginId = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(loginId))
+            {
+                return RedirectToPage("../Login");
+            }
+
+            if (authorInstitutionRepo.CheckUser(loginId) == null)
+            {
+                return RedirectToPage("../Login");
+            }
+
+
             if (id == null)
             {
                 return NotFound();
@@ -30,19 +41,21 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 CorrespondingAuthor = correspondingauthor;
             }
+
             return Page();
         }
 
         public IActionResult OnPost(string id)
         {
-            if (id == null )
+            if (id == null)
             {
                 return NotFound();
             }
+
             authorInstitutionRepo.DeleteAuthor(id);
 
             return RedirectToPage("./Index");
