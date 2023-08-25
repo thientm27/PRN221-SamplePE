@@ -12,6 +12,7 @@ namespace Repository
         public CorrespondingAuthor GetAuthorById(object id);
         public List<InstitutionInformation> GetInstitutionInformations();
         public CorrespondingAuthor? AddNewAuthor(CorrespondingAuthor author);
+        public CorrespondingAuthor? UpdateAuthor(CorrespondingAuthor author);
 
     }
 }

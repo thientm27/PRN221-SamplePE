@@ -17,7 +17,7 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
         [BindProperty]
         public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
 
-        public IActionResult OnGetc(string id)
+        public IActionResult OnGet(string id)
         {
             if (id == null)
             {

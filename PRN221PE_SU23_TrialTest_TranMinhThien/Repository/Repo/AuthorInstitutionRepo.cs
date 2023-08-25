@@ -109,5 +109,12 @@ namespace Repository.Repo
                 throw new Exception(ex.Message);
             }
         }
+
+        public CorrespondingAuthor? UpdateAuthor(CorrespondingAuthor author)
+        {
+            unitOfWork.CorrespondingAuthorDao.Update(author);
+            unitOfWork.Save();
+            return unitOfWork.CorrespondingAuthorDao.GetById(author.AuthorId);
+        }
     }
 }

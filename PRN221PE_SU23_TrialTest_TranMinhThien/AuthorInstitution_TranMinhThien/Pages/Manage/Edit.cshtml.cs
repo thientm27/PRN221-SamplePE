@@ -1,77 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using DataAccessObject.Models;
+using Repository;
+using Repository.Repo;
 
 namespace AuthorInstitution_TranMinhThien.Pages.Manage
 {
     public class EditModel : PageModel
     {
-        private readonly DataAccessObject.Models.AuthorInstitution2023DBContext _context;
-
-        public EditModel(DataAccessObject.Models.AuthorInstitution2023DBContext context)
-        {
-            _context = context;
-        }
+        private IAuthorInstitutionRepo authorInstitutionRepo = new AuthorInstitutionRepo();
+     
 
         [BindProperty]
         public CorrespondingAuthor CorrespondingAuthor { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public IActionResult OnGet(string id)
         {
-            if (id == null || _context.CorrespondingAuthors == null)
+            if (id == null)
             {
-                return NotFound();
+                return RedirectToPage("./Index");
             }
 
-            var correspondingauthor =  await _context.CorrespondingAuthors.FirstOrDefaultAsync(m => m.AuthorId == id);
+            var correspondingauthor = authorInstitutionRepo.GetAuthorById(id);
             if (correspondingauthor == null)
             {
-                return NotFound();
+                return RedirectToPage("./Index");
             }
+
             CorrespondingAuthor = correspondingauthor;
-           ViewData["InstitutionId"] = new SelectList(_context.InstitutionInformations, "InstitutionId", "Area");
+            ViewData["InstitutionId"] = new SelectList(authorInstitutionRepo.GetInstitutionInformations(), "InstitutionId", "Area");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPostAsync()
         {
-            if (!ModelState.IsValid)
+
+            if (CorrespondingAuthor == null)
             {
-                return Page();
+                return RedirectToPage("./Index");
             }
 
-            _context.Attach(CorrespondingAuthor).State = EntityState.Modified;
+            if (!CheckName(CorrespondingAuthor.AuthorName))
+            {
+                ModelState.AddModelError("CorrespondingAuthor.AuthorName", "Author’s name from 6 to 100 characters. Each word of the corresponding author name (AuthorName) must begin with the capital letter.");
+                return OnGet(CorrespondingAuthor.AuthorId);
+            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CorrespondingAuthorExists(CorrespondingAuthor.AuthorId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            authorInstitutionRepo.UpdateAuthor(CorrespondingAuthor);
 
             return RedirectToPage("./Index");
         }
-
-        private bool CorrespondingAuthorExists(string id)
+        private bool CheckName(string name)
         {
-          return (_context.CorrespondingAuthors?.Any(e => e.AuthorId == id)).GetValueOrDefault();
+            bool check = true;
+            if (name.Length < 6 || name.Length > 100)
+            {
+                check = false;
+            }
+
+            // Check if each word starts with a capital letter
+            string[] nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string part in nameParts)
+            {
+                if (!char.IsUpper(part[0]))
+                {
+                    check = false;
+                }
+            }
+            return check;
         }
     }
 }
