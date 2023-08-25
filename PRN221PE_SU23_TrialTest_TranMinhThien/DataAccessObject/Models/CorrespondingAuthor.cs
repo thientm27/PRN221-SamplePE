@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAccessObject.Models
 {
@@ -7,6 +8,7 @@ namespace DataAccessObject.Models
     {
         public string AuthorId { get; set; } = null!;
         public string AuthorName { get; set; } = null!;
+        [DataType(DataType.Date)]
         public DateTime AuthorBirthday { get; set; }
         public string Bio { get; set; } = null!;
         public string? Skills { get; set; }

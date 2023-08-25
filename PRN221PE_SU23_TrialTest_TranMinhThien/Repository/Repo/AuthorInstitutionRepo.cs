@@ -66,10 +66,11 @@ namespace Repository.Repo
         {
             return unitOfWork.InstitutionInformationDao.Get();
         }
-        private CorrespondingAuthor? AddNewAuthor(CorrespondingAuthor author)
+        public CorrespondingAuthor? AddNewAuthor(CorrespondingAuthor author)
         {
             author.AuthorId = GetNextAuthorIdString();
             unitOfWork.CorrespondingAuthorDao.Create(author);
+            unitOfWork.Save();
             return unitOfWork.CorrespondingAuthorDao.GetById(author.AuthorId);
         }
 

@@ -14,33 +14,32 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CorrespondingAuthor.AuthorId" class="control-label"></label>
-                <input asp-for="CorrespondingAuthor.AuthorId" class="form-control" />
-                <span asp-validation-for="CorrespondingAuthor.AuthorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="CorrespondingAuthor.AuthorName" class="control-label"></label>
-                <input asp-for="CorrespondingAuthor.AuthorName" class="form-control" />
+                <input asp-for="CorrespondingAuthor.AuthorName" class="form-control" required/>
                 <span asp-validation-for="CorrespondingAuthor.AuthorName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @{
+                    var startDay = new DateTime(1901,1,1);
+                    var endDay = DateTime.Today;
+                }
                 <label asp-for="CorrespondingAuthor.AuthorBirthday" class="control-label"></label>
-                <input asp-for="CorrespondingAuthor.AuthorBirthday" class="form-control" />
+                <input asp-for="CorrespondingAuthor.AuthorBirthday" class="form-control" min="@startDay.ToString("yyyy-MM-dd")" max="@endDay.ToString("yyyy-MM-dd")" required />
                 <span asp-validation-for="CorrespondingAuthor.AuthorBirthday" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CorrespondingAuthor.Bio" class="control-label"></label>
-                <input asp-for="CorrespondingAuthor.Bio" class="form-control" />
+                <input asp-for="CorrespondingAuthor.Bio" class="form-control" required />
                 <span asp-validation-for="CorrespondingAuthor.Bio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CorrespondingAuthor.Skills" class="control-label"></label>
-                <input asp-for="CorrespondingAuthor.Skills" class="form-control" />
+                <input asp-for="CorrespondingAuthor.Skills" class="form-control" required />
                 <span asp-validation-for="CorrespondingAuthor.Skills" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CorrespondingAuthor.InstitutionId" class="control-label"></label>
-                <select asp-for="CorrespondingAuthor.InstitutionId" class ="form-control" asp-items="ViewBag.InstitutionId"></select>
+                <select asp-for="CorrespondingAuthor.InstitutionId" class="form-control" asp-items="ViewBag.InstitutionId" required></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
