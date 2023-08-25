@@ -1,6 +1,5 @@
 ﻿using DataAccessObject.Models;
 
-
 namespace DataAccessObject.DAOs
 {
     internal class MemberAccoutDao : GenericDAO<MemberAccount>
@@ -15,6 +14,7 @@ namespace DataAccessObject.DAOs
             {
                 return null;
             }
+
             return Get(filter: o => o.MemberId.Equals(id)).FirstOrDefault();
         }
     }

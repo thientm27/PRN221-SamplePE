@@ -1,4 +1,4 @@
-﻿namespace ClubMemberShip.Repo.Utils;
+﻿namespace DataAccessObject.Utils;
 
 public class Pagination<T>
 {

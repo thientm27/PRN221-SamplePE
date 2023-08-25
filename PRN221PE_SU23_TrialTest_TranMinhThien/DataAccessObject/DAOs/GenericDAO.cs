@@ -1,8 +1,7 @@
-﻿using ClubMemberShip.Repo.Utils;
-using DataAccessObject.Models;
+﻿using DataAccessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
+using DataAccessObject.Utils;
 
 namespace DataAccessObject.DAOs
 {
@@ -12,7 +11,7 @@ namespace DataAccessObject.DAOs
 
         public GenericDAO(AuthorInstitution2023DBContext context)
         {
-            this.Context = context;
+            Context = context;
         }
         public List<TEntity> Get(
             Expression<Func<TEntity, bool>>? filter = null,

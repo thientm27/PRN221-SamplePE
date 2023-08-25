@@ -1,5 +1,5 @@
-﻿using ClubMemberShip.Repo.Utils;
-using DataAccessObject.Models;
+﻿using DataAccessObject.Models;
+using DataAccessObject.Utils;
 
 namespace Repository
 {

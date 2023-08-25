@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataAccessObject.Models
+﻿namespace DataAccessObject.Models
 {
     public partial class InstitutionInformation
     {
