@@ -26,21 +26,37 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
 
         [BindProperty]
         public string? Keyword { get; set; }
-        public IActionResult OnGet()
+        [BindProperty]
+        public string? NewId { get; set; }
+        public IActionResult OnGet(string? id)
         {
-            var data = authorInstitutionRepo.GetAuthorPagination(PageIndex - 1, PageSize);
-            TotalPages = data.TotalPagesCount;
-            CorrespondingAuthor = data.Items.ToList();
-            return Page();
+            if(id == null)
+            {
+                NewId = null;
+                var data = authorInstitutionRepo.GetAuthorPagination(PageIndex - 1, PageSize);
+                TotalPages = data.TotalPagesCount;
+                CorrespondingAuthor = data.Items.ToList();
+                return Page();
+            }
+            else
+            {
+                NewId = id;
+                var data = authorInstitutionRepo.GetAuthorPaginationSpecialEntity(PageIndex - 1, PageSize, NewId);
+                TotalPages = data.TotalPagesCount;
+                CorrespondingAuthor = data.Items.ToList();
+                return Page();
+            }
+
         }
         public IActionResult OnPost()
         {
             if(Keyword == null)
             {
-               return OnGet();
+               return OnGet(NewId);
             }
             else
             {
+                NewId = null;
                 if (SearchBy!.Equals("name"))
                 {
                     var data = authorInstitutionRepo.GetAuthorPaginationSearch(PageIndex - 1, PageSize, Keyword, 1);
@@ -55,7 +71,6 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
                     CorrespondingAuthor = data.Items.ToList();
                     return Page();
                 }
-   
             }
 
         }

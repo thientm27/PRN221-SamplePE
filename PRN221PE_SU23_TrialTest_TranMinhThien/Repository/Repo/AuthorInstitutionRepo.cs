@@ -15,7 +15,7 @@ namespace Repository.Repo
     public class AuthorInstitutionRepo : IAuthorInstitutionRepo
     {
         private UnitOfWork unitOfWork = new UnitOfWork();
-       
+
         public void DeleteAuthor(object id)
         {
             unitOfWork.CorrespondingAuthorDao.DeleteById(id);
@@ -30,8 +30,18 @@ namespace Repository.Repo
         {
             var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution");
             return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
-        }
 
+        }
+        public Pagination<CorrespondingAuthor> GetAuthorPaginationSpecialEntity(int pageIndex, int pageSize, string keyId)
+        {
+            var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution", orderBy: q => q.OrderBy(author => author.AuthorId != keyId));
+            return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+        }
+        public Pagination<CorrespondingAuthor> GetAuthorPaginationNewItemFirst(int pageIndex, int pageSize)
+        {
+            var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution", orderBy: q => q.OrderByDescending(author => author.AuthorId));
+            return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
+        }
         public Pagination<CorrespondingAuthor> GetAuthorPaginationSearch(int pageIndex, int pageSize, string key, int type = 0)
         {
             switch (type)

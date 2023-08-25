@@ -33,9 +33,9 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
                 return OnGet();
             }
 
-            authorInstitutionRepo.AddNewAuthor(CorrespondingAuthor);
+            var result = authorInstitutionRepo.AddNewAuthor(CorrespondingAuthor);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new {id = result?.AuthorId});
         }
 
         private bool CheckBirthday(DateTime birthday)

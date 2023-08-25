@@ -47,9 +47,9 @@ namespace AuthorInstitution_TranMinhThien.Pages.Manage
                 return OnGet(CorrespondingAuthor.AuthorId);
             }
 
-            authorInstitutionRepo.UpdateAuthor(CorrespondingAuthor);
+                var result =   authorInstitutionRepo.UpdateAuthor(CorrespondingAuthor);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { id = result?.AuthorId });
         }
         private bool CheckName(string name)
         {
