@@ -26,7 +26,7 @@ namespace Repository.Repo
 
         public Pagination<CorrespondingAuthor> GetAuthorPagination(int pageIndex, int pageSize)
         {
-            var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: "Institution");
+            var entities = unitOfWork.CorrespondingAuthorDao.Get(includeProperties: nameof(CorrespondingAuthor.Institution));
             return unitOfWork.CorrespondingAuthorDao.ToPagination(entities, pageIndex, pageSize);
 
         }
